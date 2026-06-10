@@ -51,10 +51,10 @@
 
     .shape-strip {
       display: flex;
-      gap: 12px;
+      gap: 9px;
       overflow-x: auto;
       scrollbar-width: none;
-      padding: 0 2px 3px;
+      padding: 0 6px 3px 2px;
       scroll-snap-type: x proximity;
     }
 
@@ -63,29 +63,30 @@
     }
 
     .shape {
-      flex: 0 0 95px;
+      flex: 0 0 94px;
       text-align: center;
       scroll-snap-align: start;
+      overflow: visible;
     }
 
     .shape h3 {
-      margin: 0 0 3px;
-      font-size: 17px;
+      margin: 0 0 2px;
+      font-size: 15px;
       line-height: 1;
       font-weight: 850;
       letter-spacing: -.03em;
     }
 
     .diagram {
-      --left: 11px;
-      --top-grid: 22px;
-      --w: 72px;
-      --h: 76px;
+      --left: 10px;
+      --top-grid: 21px;
+      --w: 70px;
+      --h: 74px;
       --string-step: calc(var(--w) / 5);
       --fret-step: calc(var(--h) / 4);
 
       width: 96px;
-      height: 106px;
+      height: 100px;
       margin: 0 auto;
       position: relative;
       color: var(--grid);
@@ -139,10 +140,10 @@
 
     .fret-label {
       position: absolute;
-      left: calc(var(--left) + var(--w) + 6px);
-      top: calc(var(--top-grid) + 7px);
+      left: calc(var(--left) + var(--w) + 10px);
+      top: calc(var(--top-grid) + 6px);
       color: var(--grid);
-      font-size: 13px;
+      font-size: 11px;
       line-height: 1;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
@@ -151,8 +152,8 @@
       position: absolute;
       left: calc(var(--left) + (var(--s) * var(--string-step)));
       top: calc(var(--top-grid) + ((var(--f) - .5) * var(--fret-step)));
-      width: 20px;
-      height: 20px;
+      width: 15px;
+      height: 15px;
       aspect-ratio: 1 / 1;
       border-radius: 50%;
       background: var(--dot);
@@ -160,48 +161,60 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
+      font-size: 9px;
       font-weight: 950;
       line-height: 1;
       transform: translate(-50%, -50%);
       z-index: 2;
       padding: 0;
-      box-shadow: 0 0 0 1px rgba(0, 0, 0, .16);
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, .22);
     }
 
     .content {
-      padding: 16px 18px 100px;
+      padding: 10px 18px 100px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: clamp(15px, 4.1vw, 24px);
-      line-height: 1.18;
+      font-size: clamp(15px, 4.05vw, 24px);
+      line-height: 1.12;
     }
 
     .section {
-      margin: 30px 0 10px;
+      margin: 20px 0 5px;
       color: var(--text);
-      font-size: 1.05em;
+      font-size: 1.02em;
     }
 
     .songline {
       position: relative;
-      min-height: 52px;
-      margin: 4px 0 16px;
-      padding-top: 24px;
+      min-height: 45px;
+      margin: 0 0 7px;
+      padding-top: 22px;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
+    }
+
+    .songline.no-chords {
+      min-height: 1.18em;
+      margin: 0 0 7px;
+      padding-top: 0;
+    }
+
+    .songline.empty {
+      min-height: 28px;
+      margin: 0 0 2px;
+      padding-top: 17px;
     }
 
     .chord {
       position: absolute;
       top: 0;
-      left: calc(var(--x) * .86ch);
+      left: calc(var(--x) * .84ch);
       background: var(--chip);
       color: #d6d7dd;
-      border-radius: 5px;
-      padding: 1px 5px 2px;
+      border-radius: 4px;
+      padding: 0 3px 1px;
       font-weight: 900;
-      font-size: .80em;
-      line-height: 1.05;
+      font-size: .68em;
+      line-height: .98;
       white-space: nowrap;
     }
 
@@ -224,14 +237,14 @@
 
     @media (max-width: 390px) {
       .shape {
-        flex-basis: 90px;
+        flex-basis: 88px;
       }
 
       .diagram {
-        --w: 68px;
-        --h: 72px;
-        width: 90px;
-        height: 102px;
+        --w: 66px;
+        --h: 70px;
+        width: 88px;
+        height: 96px;
       }
 
       .content {
@@ -240,22 +253,44 @@
       }
 
       .dot {
-        width: 18px;
-        height: 18px;
-        font-size: 11px;
+        width: 14px;
+        height: 14px;
+        font-size: 8.5px;
+      }
+
+      .songline {
+        min-height: 42px;
+        margin: 0 0 6px;
+        padding-top: 20px;
+      }
+
+      .songline.no-chords {
+        min-height: 1.16em;
+        margin: 0 0 6px;
+        padding-top: 0;
+      }
+
+      .songline.empty {
+        min-height: 25px;
+        margin: 0 0 2px;
+        padding-top: 16px;
+      }
+
+      .section {
+        margin-top: 18px;
       }
     }
 
     @media (min-width: 720px) {
       .shape {
-        flex-basis: 112px;
+        flex-basis: 108px;
       }
 
       .diagram {
-        --w: 82px;
-        --h: 84px;
-        width: 110px;
-        height: 116px;
+        --w: 80px;
+        --h: 82px;
+        width: 108px;
+        height: 108px;
       }
 
       .content {
@@ -1343,17 +1378,16 @@
     function renderChart() {
       const html = chart.map(section => {
         const rows = section.rows.map(row => {
+          const rowClasses = ["songline"];
+          if (!row.chords.length) rowClasses.push("no-chords");
+          if (!row.cue.trim()) rowClasses.push("empty");
+
           const chords = row.chords.map(([x, name]) => {
             const displayName = name === "A" ? "Asus2" : name;
             return `<span class="chord" style="--x:${x}">${displayName}</span>`;
           }).join("");
 
-          return `
-            <div class="songline">
-              ${chords}
-              <span class="editline" contenteditable="true" spellcheck="false">${row.cue}</span>
-            </div>
-          `;
+          return `<div class="${rowClasses.join(" ")}">${chords}<span class="editline" contenteditable="true" spellcheck="false">${row.cue}</span></div>`;
         }).join("");
 
         return `<div class="section">[${section.section}]</div>${rows}`;
@@ -1366,7 +1400,7 @@
     renderChart();
 
     // Persist edits locally. Tiny mercy in this collapsing civilization.
-    const storageKey = "high-voicing-chart-edits-v2";
+    const storageKey = "high-voicing-chart-edits-v5-balanced";
     const chartEl = document.getElementById("chart");
 
     function loadEdits() {
