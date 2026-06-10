@@ -3,31 +3,38 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Thank God I’m Free - Practice Sheet</title>
+  <title>Thank God I'm Free - High Voicings</title>
   <style>
     :root {
       --bg: #111216;
-      --top: rgba(18, 19, 24, .88);
-      --text: #e7e7eb;
+      --top: rgba(18, 19, 24, .90);
+      --text: #e8e8ed;
       --muted: #9b9ca4;
-      --chip: #2b2c32;
-      --line: rgba(255,255,255,.08);
-      --grid: #d6d6dc;
+      --chip: #2b2c33;
+      --line: rgba(255,255,255,.09);
+      --grid: #d8d8df;
+      --dot: #e3e3e8;
+      --dot-text: #292a30;
     }
 
     * { box-sizing: border-box; }
 
-    body {
+    html, body {
       margin: 0;
+      min-height: 100%;
       background: var(--bg);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
     }
 
+    body {
+      overflow-x: hidden;
+    }
+
     .wrap {
-      max-width: 760px;
+      max-width: 860px;
       margin: 0 auto;
-      padding-bottom: 80px;
+      padding-bottom: 90px;
     }
 
     .pinned {
@@ -38,47 +45,51 @@
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--line);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, .20);
       padding: max(8px, env(safe-area-inset-top)) 8px 8px;
-      box-shadow: 0 10px 22px rgba(0,0,0,.18);
     }
 
     .shape-strip {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       overflow-x: auto;
       scrollbar-width: none;
-      padding-bottom: 2px;
+      padding: 0 2px 3px;
+      scroll-snap-type: x proximity;
     }
 
-    .shape-strip::-webkit-scrollbar { display: none; }
+    .shape-strip::-webkit-scrollbar {
+      display: none;
+    }
 
     .shape {
-      flex: 0 0 86px;
+      flex: 0 0 95px;
       text-align: center;
+      scroll-snap-align: start;
     }
 
     .shape h3 {
       margin: 0 0 3px;
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: -.02em;
+      font-size: 17px;
+      line-height: 1;
+      font-weight: 850;
+      letter-spacing: -.03em;
     }
 
     .diagram {
-      --left: 10px;
-      --top-grid: 21px;
-      --w: 68px;
-      --h: 72px;
+      --left: 11px;
+      --top-grid: 22px;
+      --w: 72px;
+      --h: 76px;
       --string-step: calc(var(--w) / 5);
       --fret-step: calc(var(--h) / 4);
 
-      width: 88px;
-      height: 104px;
+      width: 96px;
+      height: 106px;
       margin: 0 auto;
       position: relative;
       color: var(--grid);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 10px;
       overflow: visible;
     }
 
@@ -88,10 +99,7 @@
       top: var(--top-grid);
       width: var(--w);
       height: var(--h);
-      border-left: 2px solid var(--grid);
-      border-right: 2px solid var(--grid);
-      border-top: 2px solid var(--grid);
-      border-bottom: 2px solid var(--grid);
+      border: 2px solid var(--grid);
     }
 
     .grid::before {
@@ -112,43 +120,14 @@
         );
     }
 
-    .fret {
-      position: absolute;
-      left: calc(var(--left) + var(--w) + 5px);
-      top: calc(var(--top-grid) + 10px);
-      color: #d8d8df;
-      font-size: 13px;
-    }
-
-    .dot {
-      position: absolute;
-      left: calc(var(--left) + (var(--s) * var(--string-step)));
-      top: calc(var(--top-grid) + ((var(--f) - .5) * var(--fret-step)));
-      width: 18px;
-      height: 18px;
-      aspect-ratio: 1 / 1;
-      border-radius: 50%;
-      background: #d7d7dd;
-      color: #303138;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 900;
-      z-index: 2;
-      transform: translate(-50%, -50%);
-      line-height: 1;
-      padding: 0;
-    }
-
-    .mute, .open {
+    .xo {
       position: absolute;
       top: 0;
       transform: translateX(-50%);
       font-size: 19px;
-      color: #d8d8df;
+      color: var(--grid);
       line-height: 1;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .s0 { left: calc(var(--left) + 0 * var(--string-step)); }
@@ -158,37 +137,56 @@
     .s4 { left: calc(var(--left) + 4 * var(--string-step)); }
     .s5 { left: calc(var(--left) + 5 * var(--string-step)); }
 
-    .barre {
+    .fret-label {
       position: absolute;
-      left: calc(var(--left) + (var(--from) * var(--string-step)));
+      left: calc(var(--left) + var(--w) + 6px);
+      top: calc(var(--top-grid) + 7px);
+      color: var(--grid);
+      font-size: 13px;
+      line-height: 1;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .dot {
+      position: absolute;
+      left: calc(var(--left) + (var(--s) * var(--string-step)));
       top: calc(var(--top-grid) + ((var(--f) - .5) * var(--fret-step)));
-      width: calc((var(--to) - var(--from)) * var(--string-step));
-      height: 9px;
-      border-radius: 999px;
-      background: #d7d7dd;
-      box-shadow: 0 0 0 1px rgba(0,0,0,.18);
-      transform: translateY(-50%);
-      z-index: 1;
+      width: 20px;
+      height: 20px;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background: var(--dot);
+      color: var(--dot-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 950;
+      line-height: 1;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      padding: 0;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, .16);
     }
 
     .content {
-      padding: 12px 18px 90px;
+      padding: 16px 18px 100px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: clamp(15px, 4.05vw, 24px);
+      font-size: clamp(15px, 4.1vw, 24px);
       line-height: 1.18;
     }
 
     .section {
       margin: 30px 0 10px;
       color: var(--text);
-      font-size: 1.02em;
+      font-size: 1.05em;
     }
 
     .songline {
       position: relative;
+      min-height: 52px;
       margin: 4px 0 16px;
-      padding-top: 22px;
-      min-height: 48px;
+      padding-top: 24px;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
@@ -198,179 +196,1195 @@
       top: 0;
       left: calc(var(--x) * .86ch);
       background: var(--chip);
-      color: #d2d3da;
+      color: #d6d7dd;
       border-radius: 5px;
       padding: 1px 5px 2px;
       font-weight: 900;
-      font-size: .78em;
+      font-size: .80em;
       line-height: 1.05;
+      white-space: nowrap;
     }
 
-    @media (max-width: 380px) {
-      .shape { flex-basis: 80px; }
-      .diagram {
-        --w: 62px;
-        --h: 68px;
-        width: 80px;
-      }
-      .content { font-size: 14px; padding-inline: 14px; }
+    .cue {
+      color: var(--muted);
+      font-size: .82em;
     }
 
-    @media (min-width: 700px) {
-      .shape { flex-basis: 104px; }
-      .diagram {
-        --w: 78px;
-        --h: 82px;
-        width: 100px;
-        height: 112px;
+    .editline {
+      display: inline-block;
+      min-width: 12ch;
+      color: var(--text);
+      outline: 0;
+      border-bottom: 1px dotted rgba(255,255,255,.14);
+    }
+
+    .editline:focus {
+      border-bottom-color: rgba(255,255,255,.45);
+    }
+
+    @media (max-width: 390px) {
+      .shape {
+        flex-basis: 90px;
       }
-      .content { padding-inline: 34px; }
+
+      .diagram {
+        --w: 68px;
+        --h: 72px;
+        width: 90px;
+        height: 102px;
+      }
+
+      .content {
+        padding-inline: 14px;
+        font-size: 14px;
+      }
+
+      .dot {
+        width: 18px;
+        height: 18px;
+        font-size: 11px;
+      }
+    }
+
+    @media (min-width: 720px) {
+      .shape {
+        flex-basis: 112px;
+      }
+
+      .diagram {
+        --w: 82px;
+        --h: 84px;
+        width: 110px;
+        height: 116px;
+      }
+
+      .content {
+        padding-inline: 34px;
+      }
     }
   </style>
 </head>
 <body>
   <main class="wrap">
     <section class="pinned">
-      <div class="shape-strip">
-        <div class="shape">
-          <h3>E</h3>
-          <div class="diagram">
-            <span class="mute s0">×</span><span class="mute s1">×</span><span class="mute s5">×</span>
-            <div class="grid"></div><span class="fret">9</span>
-            <span class="dot" style="--s:2;--f:1">1</span>
-            <span class="dot" style="--s:3;--f:1">1</span>
-            <span class="dot" style="--s:4;--f:1">1</span>
-          </div>
-        </div>
-
-        <div class="shape">
-          <h3>C#m</h3>
-          <div class="diagram">
-            <span class="mute s0">×</span><span class="mute s1">×</span><span class="mute s5">×</span>
-            <div class="grid"></div><span class="fret">9</span>
-            <span class="dot" style="--s:2;--f:3">3</span>
-            <span class="dot" style="--s:3;--f:1">1</span>
-            <span class="dot" style="--s:4;--f:1">1</span>
-          </div>
-        </div>
-
-        <div class="shape">
-          <h3>A</h3>
-          <div class="diagram">
-            <span class="mute s0">×</span><span class="mute s1">×</span><span class="mute s5">×</span>
-            <div class="grid"></div><span class="fret">9</span>
-            <span class="dot" style="--s:2;--f:3">3</span>
-            <span class="dot" style="--s:3;--f:1">1</span>
-            <span class="dot" style="--s:4;--f:2">2</span>
-          </div>
-        </div>
-
-        <div class="shape">
-          <h3>B</h3>
-          <div class="diagram">
-            <span class="mute s0">×</span><span class="mute s1">×</span><span class="mute s2">×</span>
-            <div class="grid"></div><span class="fret">11</span>
-            <span class="dot" style="--s:3;--f:1">1</span>
-            <span class="dot" style="--s:4;--f:2">3</span>
-            <span class="dot" style="--s:5;--f:1">1</span>
-          </div>
-        </div>
-
-        <div class="shape">
-          <h3>F#m</h3>
-          <div class="diagram">
-            <span class="mute s0">×</span><span class="mute s1">×</span><span class="mute s5">×</span>
-            <div class="grid"></div><span class="fret">10</span>
-            <span class="dot" style="--s:2;--f:2">3</span>
-            <span class="dot" style="--s:3;--f:2">2</span>
-            <span class="dot" style="--s:4;--f:1">1</span>
-          </div>
-        </div>
-      </div>
+      <div class="shape-strip" id="shapeStrip" aria-label="Pinned chord shapes"></div>
     </section>
 
-    <section class="content">
-      <div class="section">[Intro]</div>
-      <div class="songline"><span class="chord" style="--x:0">E</span>We're grateful        for free_____dom</div>
-      <div class="songline"><span class="chord" style="--x:0">C#m</span><span class="chord" style="--x:7">E</span>We thank You for freedom</div>
-      <div class="songline"><span class="chord" style="--x:18">E</span>Come on, sing it out</div>
-
-      <div class="section">[Verse 1]</div>
-      <div class="songline"><span class="chord" style="--x:3">E</span>I'm shaking off the heaviness</div>
-      <div class="songline"><span class="chord" style="--x:0">A</span><span class="chord" style="--x:7">E</span>I'm dancing out of my regrets</div>
-      <div class="songline"><span class="chord" style="--x:3">C#m</span>I'm throwing caution to the wind</div>
-      <div class="songline"><span class="chord" style="--x:0">B</span><span class="chord" style="--x:5">A</span>No, I am not ashamed to praise like this</div>
-
-      <div class="songline"><span class="chord" style="--x:0">E</span>Some would say it's foolishness</div>
-      <div class="songline"><span class="chord" style="--x:0">A</span><span class="chord" style="--x:6">E</span>But I say it's worth the risk</div>
-      <div class="songline"><span class="chord" style="--x:3">C#m</span>I can't forget what Jesus did</div>
-      <div class="songline"><span class="chord" style="--x:0">B</span><span class="chord" style="--x:5">A</span>No, I am not ashamed to praise like this</div>
-
-      <div class="section">[Chorus]</div>
-      <div class="songline"><span class="chord" style="--x:0">E</span><span class="chord" style="--x:24">A</span>Where are those chains that once held me?</div>
-      <div class="songline"><span class="chord" style="--x:0">E</span>I'm free, I'm free
-I'm free, I'm free</div>
-      <div class="songline"><span class="chord" style="--x:0">C#m</span><span class="chord" style="--x:17">A</span>My sin is gone, how can it be?</div>
-      <div class="songline"><span class="chord" style="--x:0">E</span>I'm free, I'm free
-I'm free, I'm free</div>
-      <div class="songline"><span class="chord" style="--x:0">E</span><span class="chord" style="--x:24">A</span>And look at what the Lord has done</div>
-      <div class="songline"><span class="chord" style="--x:0">E</span>I'm never going back to the way I was</div>
-      <div class="songline"><span class="chord" style="--x:0">C#m</span><span class="chord" style="--x:20">A</span>I'll sing, I'll dance 'cause I believe</div>
-      <div class="songline"><span class="chord" style="--x:0">E</span>I'm free, I'm free</div>
-      <div class="songline"><span class="chord" style="--x:6">E</span><span class="chord" style="--x:17">B</span><span class="chord" style="--x:21">E</span>Thank God, I'm free</div>
-
-      <div class="section">[Verse 2]</div>
-      <div class="songline"><span class="chord" style="--x:0">E</span>I found a Friend that never quits</div>
-      <div class="songline"><span class="chord" style="--x:0">A</span><span class="chord" style="--x:7">E</span>No other love's as good as this</div>
-      <div class="songline"><span class="chord" style="--x:3">C#m</span>And I don't care what anyone says</div>
-      <div class="songline"><span class="chord" style="--x:0">B</span><span class="chord" style="--x:5">A</span>I'll never be ashamed to praise like this</div>
-
-      <div class="section">[Chorus]</div>
-      <div class="songline"><span class="chord" style="--x:0">E</span><span class="chord" style="--x:24">A</span>Where are those chains that once held me?</div>
-      <div class="songline"><span class="chord" style="--x:0">E</span>I'm free, I'm free
-I'm free, I'm free</div>
-      <div class="songline"><span class="chord" style="--x:0">C#m</span><span class="chord" style="--x:17">A</span>My sin is gone, how can it be?</div>
-      <div class="songline"><span class="chord" style="--x:0">E</span>I'm free, I'm free
-I'm free, I'm free</div>
-      <div class="songline"><span class="chord" style="--x:0">E</span><span class="chord" style="--x:24">A</span>And look at what the Lord has done</div>
-      <div class="songline"><span class="chord" style="--x:0">E</span>I'm never going back to the way I was</div>
-      <div class="songline"><span class="chord" style="--x:0">C#m</span><span class="chord" style="--x:20">A</span>I'll sing, I'll dance 'cause I believe</div>
-      <div class="songline"><span class="chord" style="--x:0">E</span>I'm free, I'm free</div>
-      <div class="songline"><span class="chord" style="--x:6">E</span><span class="chord" style="--x:17">B</span><span class="chord" style="--x:21">E</span>Thank God, I'm free</div>
-
-      <div class="section">[Bridge]</div>
-      <div class="songline"><span class="chord" style="--x:3">E</span>You took the cross and You broke Your</div>
-      <div class="songline"><span class="chord" style="--x:0">B</span><span class="chord" style="--x:4">E</span>body</div>
-      <div class="songline"><span class="chord" style="--x:3">E</span>You shed Your blood, now the sinner can</div>
-      <div class="songline"><span class="chord" style="--x:0">B</span><span class="chord" style="--x:4">E</span>sing</div>
-      <div class="songline"><span class="chord" style="--x:3">E</span><span class="chord" style="--x:27">B</span><span class="chord" style="--x:31">E</span>My debt is paid and my record is clean</div>
-      <div class="songline"><span class="chord" style="--x:3">E</span><span class="chord" style="--x:29">B</span>I couldn't do it, so You did it for me</div>
-
-      <div class="section">[Bridge 2]</div>
-      <div class="songline"><span class="chord" style="--x:3">A</span>You took the cross and You broke Your</div>
-      <div class="songline"><span class="chord" style="--x:0">B</span><span class="chord" style="--x:4">E</span>body</div>
-      <div class="songline"><span class="chord" style="--x:3">A</span>You shed Your blood, now the sinner can</div>
-      <div class="songline"><span class="chord" style="--x:0">B</span><span class="chord" style="--x:4">E</span>sing</div>
-      <div class="songline"><span class="chord" style="--x:3">A</span><span class="chord" style="--x:27">B</span><span class="chord" style="--x:31">E</span>My debt is paid and my record is clean</div>
-      <div class="songline"><span class="chord" style="--x:3">A</span><span class="chord" style="--x:29">B</span>I couldn't do it, so You did it for me</div>
-
-      <div class="songline"><span class="chord" style="--x:3">E</span></div>
-      <div class="songline"><span class="chord" style="--x:3">A</span><span class="chord" style="--x:29">B</span>I couldn't do it, so You did it for me</div>
-      <div class="songline"><span class="chord" style="--x:3">E</span></div>
-      <div class="songline"><span class="chord" style="--x:3">A</span><span class="chord" style="--x:29">B</span>I couldn't do it, so You did it for me</div>
-      <div class="songline"><span class="chord" style="--x:3">E</span></div>
-      <div class="songline"><span class="chord" style="--x:3">A</span><span class="chord" style="--x:29">E</span>I couldn't do it, so You did it for me</div>
-
-      <div class="section">[Outro]</div>
-      <div class="songline"><span class="chord" style="--x:18">E</span>And look at what the Lord has done</div>
-      <div class="songline"><span class="chord" style="--x:3">E</span>I'm never going back to the way I was</div>
-      <div class="songline"><span class="chord" style="--x:15">E</span>Look at what the Lord has done</div>
-      <div class="songline"><span class="chord" style="--x:3">E</span>I'm never going back to the way I was</div>
-      <div class="songline"><span class="chord" style="--x:0">E</span>Look at what the Lord has done</div>
-      <div class="songline"><span class="chord" style="--x:3">E</span>I'm never going back to the way I was</div>
-      <div class="songline"><span class="chord" style="--x:15">E</span>Look at what the Lord has done</div>
-      <div class="songline"><span class="chord" style="--x:3">B</span><span class="chord" style="--x:10">E</span><span class="chord" style="--x:18">A</span>I'm never going back to the way I was</div>
-    </section>
+    <section class="content" id="chart"></section>
   </main>
+
+  <script>
+    const chordShapes = [
+      // strings: 0 low E, 1 A, 2 D, 3 G, 4 B, 5 high e
+      { name: "E/G#",  start: 12, muted: [0,1,2], dots: [[3,13,2],[4,12,1],[5,12,1]] },
+      { name: "Asus2", start: 9,  muted: [0,1,5], dots: [[2,9,1],[3,9,1],[4,10,2]] },
+      { name: "E",     start: 9,  muted: [0,1,5], dots: [[2,9,1],[3,9,1],[4,9,1]] },
+      { name: "Esus2", start: 9,  muted: [0,1],   dots: [[2,9,1],[3,11,2],[4,12,3],[5,12,4]] },
+      { name: "Esus4", start: 9,  muted: [0,1],   dots: [[2,9,1],[3,9,1],[4,10,2],[5,12,4]] },
+      { name: "C#m7",  start: 9,  muted: [0,1],   dots: [[2,9,1],[3,9,1],[4,9,1],[5,9,1]] },
+      { name: "B",     start: 11, muted: [0,1,2], dots: [[3,11,1],[4,12,3],[5,11,1]] },
+      { name: "E/B",   start: 9,  muted: [0,1],   dots: [[2,9,1],[3,9,1],[4,9,1],[5,12,4]] },
+      { name: "E/C#",  start: 9,  muted: [0,1],   dots: [[2,11,3],[3,9,1],[4,9,1],[5,12,4]] },
+      { name: "B/E",   start: 9,  muted: [0,1],   dots: [[2,9,1],[3,11,2],[4,12,4],[5,11,3]] },
+      { name: "B/D#",  start: 11, muted: [0,1,5], dots: [[2,13,3],[3,11,1],[4,12,2]] },
+      { name: "F#m7",  start: 10, muted: [0,1],   dots: [[2,11,2],[3,11,3],[4,10,1],[5,12,4]] },
+      { name: "Emaj7", start: 9,  muted: [0,1],   dots: [[2,9,1],[3,9,1],[4,9,1],[5,11,3]] }
+    ];
+
+    const chart = [
+      {
+            "section": "Intro",
+            "rows": [
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E"
+                              ],
+                              [
+                                    13,
+                                    "Esus2"
+                              ],
+                              [
+                                    25,
+                                    "Esus4"
+                              ],
+                              [
+                                    31,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "We're grateful for free_____dom"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "C#m7"
+                              ],
+                              [
+                                    5,
+                                    "E"
+                              ],
+                              [
+                                    27,
+                                    "Esus2"
+                              ]
+                        ],
+                        "cue": "We thank You for freedom"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    17,
+                                    "Esus4"
+                              ],
+                              [
+                                    22,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "Come on, sing it out"
+                  }
+            ]
+      },
+      {
+            "section": "Verse 1",
+            "rows": [
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "E/G#"
+                              ]
+                        ],
+                        "cue": "I'm shaking off the heaviness"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "Asus2"
+                              ],
+                              [
+                                    8,
+                                    "E"
+                              ],
+                              [
+                                    30,
+                                    "Esus2"
+                              ]
+                        ],
+                        "cue": "I'm dancing out of my regrets"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E"
+                              ]
+                        ],
+                        "cue": ""
+                  },
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "C#m7"
+                              ]
+                        ],
+                        "cue": "I'm throwing caution to the wind"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "B"
+                              ],
+                              [
+                                    5,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "No, I am not ashamed to praise like"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "this"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E/G#"
+                              ]
+                        ],
+                        "cue": "Some would say it's foolishness"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "Asus2"
+                              ],
+                              [
+                                    6,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "But I say it's worth the risk"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "Esus2"
+                              ],
+                              [
+                                    6,
+                                    "E"
+                              ]
+                        ],
+                        "cue": ""
+                  },
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "C#m7"
+                              ]
+                        ],
+                        "cue": "I can't forget what Jesus did"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "B"
+                              ],
+                              [
+                                    5,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "No, I am not ashamed to praise like"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "this"
+                  }
+            ]
+      },
+      {
+            "section": "Chorus",
+            "rows": [
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E/G#"
+                              ],
+                              [
+                                    24,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "Where are those chains that"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "once held me?"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E/B"
+                              ]
+                        ],
+                        "cue": "I'm free, I'm free"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "I'm free, I'm free"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "C#m7"
+                              ],
+                              [
+                                    17,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "My sin is gone, how can it be?"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E"
+                              ],
+                              [
+                                    17,
+                                    "Esus4"
+                              ]
+                        ],
+                        "cue": "I'm free, I'm free"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "I'm free, I'm free"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E/G#"
+                              ],
+                              [
+                                    24,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "And look at what the Lord has done"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "I'm never going back to the way I was"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "C#m7"
+                              ],
+                              [
+                                    20,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "I'll sing, I'll dance 'cause I"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "believe"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E"
+                              ],
+                              [
+                                    17,
+                                    "Esus4"
+                              ]
+                        ],
+                        "cue": "I'm free, I'm free"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    6,
+                                    "E"
+                              ],
+                              [
+                                    17,
+                                    "B/D#"
+                              ],
+                              [
+                                    23,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "Thank God, I'm free     (Hey)"
+                  }
+            ]
+      },
+      {
+            "section": "Verse 2",
+            "rows": [
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E"
+                              ],
+                              [
+                                    3,
+                                    "Esus2"
+                              ],
+                              [
+                                    9,
+                                    "Esus4"
+                              ],
+                              [
+                                    15,
+                                    "E"
+                              ],
+                              [
+                                    20,
+                                    "E/G#"
+                              ]
+                        ],
+                        "cue": "I found a Friend that"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "never quits"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "Asus2"
+                              ],
+                              [
+                                    8,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "No other love's as good as this"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "C#m7"
+                              ]
+                        ],
+                        "cue": "And I don't care what anyone says"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "B"
+                              ],
+                              [
+                                    5,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "I'll never be ashamed to praise like"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "this"
+                  }
+            ]
+      },
+      {
+            "section": "Chorus",
+            "rows": [
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E/G#"
+                              ],
+                              [
+                                    24,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "Where are those chains that"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "once held me?"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E/B"
+                              ]
+                        ],
+                        "cue": "I'm free, I'm free"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "I'm free, I'm free"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "C#m7"
+                              ],
+                              [
+                                    17,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "My sin is gone, how can it be?"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E"
+                              ],
+                              [
+                                    17,
+                                    "Esus4"
+                              ]
+                        ],
+                        "cue": "I'm free, I'm free"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "I'm free, I'm free"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E/G#"
+                              ],
+                              [
+                                    24,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "And look at what the Lord has done"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "I'm never going back to the way I was"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "C#m7"
+                              ],
+                              [
+                                    20,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "I'll sing, I'll dance 'cause I"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "believe"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E"
+                              ],
+                              [
+                                    17,
+                                    "Esus4"
+                              ]
+                        ],
+                        "cue": "I'm free, I'm free"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    6,
+                                    "E"
+                              ],
+                              [
+                                    17,
+                                    "B/D#"
+                              ],
+                              [
+                                    23,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "Thank God, I'm free"
+                  }
+            ]
+      },
+      {
+            "section": "Bridge",
+            "rows": [
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "Esus4"
+                              ]
+                        ],
+                        "cue": "You took the cross and You broke Your"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "B/E"
+                              ],
+                              [
+                                    5,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "body"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "Esus4"
+                              ]
+                        ],
+                        "cue": "You shed Your blood, now the sinner can"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "B/E"
+                              ],
+                              [
+                                    5,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "sing"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "Esus4"
+                              ],
+                              [
+                                    27,
+                                    "B/E"
+                              ],
+                              [
+                                    32,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "My debt is paid and my record is clean"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "Esus4"
+                              ],
+                              [
+                                    29,
+                                    "B/D#"
+                              ],
+                              [
+                                    35,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "I couldn't do it, so You did it for"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "B/D#"
+                              ],
+                              [
+                                    6,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "me"
+                  }
+            ]
+      },
+      {
+            "section": "Bridge 2",
+            "rows": [
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "You took the cross and You broke Your"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "B/D#"
+                              ],
+                              [
+                                    6,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "body"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "You shed Your blood, now the sinner can"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "B/D#"
+                              ],
+                              [
+                                    6,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "sing"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "Asus2"
+                              ],
+                              [
+                                    27,
+                                    "B/D#"
+                              ],
+                              [
+                                    34,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "My debt is paid and my record is clean"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "Asus2"
+                              ],
+                              [
+                                    29,
+                                    "B/D#"
+                              ],
+                              [
+                                    35,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "I couldn't do it, so You did it for"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "B/D#"
+                              ],
+                              [
+                                    6,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "me"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "Asus2"
+                              ],
+                              [
+                                    29,
+                                    "B/D#"
+                              ],
+                              [
+                                    35,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "I couldn't do it, so You did it for"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "B/D#"
+                              ],
+                              [
+                                    6,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "me"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "Asus2"
+                              ],
+                              [
+                                    29,
+                                    "B/D#"
+                              ],
+                              [
+                                    35,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "I couldn't do it, so You did it for"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "B/D#"
+                              ],
+                              [
+                                    6,
+                                    "E"
+                              ],
+                              [
+                                    12,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "me"
+                  }
+            ]
+      },
+      {
+            "section": "Final Chorus",
+            "rows": [
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E/G#"
+                              ],
+                              [
+                                    24,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "Where are those chains that once held"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "me?"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "I'm free, I'm free"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "I'm free, I'm free"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    17,
+                                    "A"
+                              ],
+                              [
+                                    21,
+                                    "E/G#"
+                              ],
+                              [
+                                    26,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "My sin is gone, how can it be? I'm"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    11,
+                                    "F#m7"
+                              ]
+                        ],
+                        "cue": "free, I'm free"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "I'm free, I'm free"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E/G#"
+                              ],
+                              [
+                                    24,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "And look at what the Lord has done"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "I'm never going back to the way I was"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "C#m7"
+                              ],
+                              [
+                                    20,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "I'll sing, I'll dance 'cause I"
+                  },
+                  {
+                        "chords": [],
+                        "cue": "believe"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E"
+                              ],
+                              [
+                                    17,
+                                    "Esus4"
+                              ]
+                        ],
+                        "cue": "I'm free, I'm free"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    6,
+                                    "E"
+                              ],
+                              [
+                                    17,
+                                    "B/D#"
+                              ],
+                              [
+                                    23,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "Thank God, I'm free"
+                  }
+            ]
+      },
+      {
+            "section": "Outro",
+            "rows": [
+                  {
+                        "chords": [
+                              [
+                                    18,
+                                    "Emaj7"
+                              ]
+                        ],
+                        "cue": "And look at what the Lord has done"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "Esus2"
+                              ],
+                              [
+                                    24,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "I'm never going back to the way I was"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    15,
+                                    "Emaj7"
+                              ]
+                        ],
+                        "cue": "Look at what the Lord has done"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "Esus2"
+                              ],
+                              [
+                                    24,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "I'm never going back to the way I was"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    0,
+                                    "E"
+                              ],
+                              [
+                                    15,
+                                    "Emaj7"
+                              ]
+                        ],
+                        "cue": "Look at what the Lord has done"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "Esus2"
+                              ],
+                              [
+                                    24,
+                                    "E"
+                              ]
+                        ],
+                        "cue": "I'm never going back to the way I was"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    15,
+                                    "Emaj7"
+                              ]
+                        ],
+                        "cue": "Look at what the Lord has done"
+                  },
+                  {
+                        "chords": [
+                              [
+                                    3,
+                                    "B/D#"
+                              ],
+                              [
+                                    10,
+                                    "E"
+                              ],
+                              [
+                                    18,
+                                    "Asus2"
+                              ]
+                        ],
+                        "cue": "I'm never going back to the way I was"
+                  }
+            ]
+      }
+];
+
+    function renderShape(shape) {
+      const playedStrings = new Set(shape.dots.map(d => d[0]));
+      const muted = new Set(shape.muted || []);
+      const open = new Set(shape.open || []);
+      let xo = "";
+      for (let s = 0; s < 6; s++) {
+        if (muted.has(s) || (!playedStrings.has(s) && !open.has(s))) {
+          xo += `<span class="xo s${s}">×</span>`;
+        } else if (open.has(s)) {
+          xo += `<span class="xo s${s}">○</span>`;
+        }
+      }
+
+      const dots = shape.dots.map(([string, fret, finger]) => {
+        const f = fret - shape.start + 1;
+        return `<span class="dot" style="--s:${string};--f:${f}">${finger}</span>`;
+      }).join("");
+
+      return `
+        <div class="shape">
+          <h3>${shape.name}</h3>
+          <div class="diagram">
+            ${xo}
+            <div class="grid"></div>
+            <span class="fret-label">${shape.start}</span>
+            ${dots}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderChart() {
+      const html = chart.map(section => {
+        const rows = section.rows.map(row => {
+          const chords = row.chords.map(([x, name]) => {
+            const displayName = name === "A" ? "Asus2" : name;
+            return `<span class="chord" style="--x:${x}">${displayName}</span>`;
+          }).join("");
+
+          return `
+            <div class="songline">
+              ${chords}
+              <span class="editline" contenteditable="true" spellcheck="false">${row.cue}</span>
+            </div>
+          `;
+        }).join("");
+
+        return `<div class="section">[${section.section}]</div>${rows}`;
+      }).join("");
+
+      document.getElementById("chart").innerHTML = html;
+    }
+
+    document.getElementById("shapeStrip").innerHTML = chordShapes.map(renderShape).join("");
+    renderChart();
+
+    // Persist edits locally. Tiny mercy in this collapsing civilization.
+    const storageKey = "high-voicing-chart-edits-v2";
+    const chartEl = document.getElementById("chart");
+
+    function loadEdits() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
+        [...document.querySelectorAll(".editline")].forEach((el, index) => {
+          if (saved[index]) el.textContent = saved[index];
+        });
+      } catch {}
+    }
+
+    function saveEdits() {
+      const lines = [...document.querySelectorAll(".editline")].map(el => el.textContent);
+      localStorage.setItem(storageKey, JSON.stringify(lines));
+    }
+
+    chartEl.addEventListener("input", saveEdits);
+    loadEdits();
+  </script>
 </body>
 </html>
