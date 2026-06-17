@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Thank God I'm Free - High Voicings</title>
+  <title>Thank God I'm Free - C</title>
   <style>
     :root {
       --bg: #111216;
@@ -485,7 +485,119 @@
     }
 
 
+    [hidden] {
+      display: none !important;
+    }
+
+    .app-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 56px;
+      padding: max(8px, env(safe-area-inset-top)) 14px 8px;
+      background: var(--top);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, .18);
+    }
+
+    .menu-button {
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .menu-button:hover,
+    .menu-button:focus-visible {
+      background: rgba(255,255,255,.08);
+      outline: 0;
+    }
+
+    .menu-icon {
+      width: 20px;
+      height: 14px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .menu-icon span {
+      display: block;
+      height: 2px;
+      border-radius: 2px;
+      background: currentColor;
+    }
+
+    .song-title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 16px;
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .menu-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      background: rgba(0,0,0,.45);
+    }
+
+    .song-menu {
+      position: fixed;
+      z-index: 100;
+      top: calc(max(8px, env(safe-area-inset-top)) + 52px);
+      left: 14px;
+      width: min(300px, calc(100vw - 28px));
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #1b1c22;
+      box-shadow: 0 18px 44px rgba(0,0,0,.42);
+    }
+
+    .song-menu button {
+      width: 100%;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text);
+      display: block;
+      padding: 12px 10px;
+      text-align: left;
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .song-menu button[aria-current="true"],
+    .song-menu button:hover,
+    .song-menu button:focus-visible {
+      background: rgba(255,255,255,.09);
+      outline: 0;
+    }
+
     /* Latest pass: section markers go back in the lyric flow, chord banks scroll normally, and diagrams are readable by human eyes. */
+    .content {
+      padding-top: 82px;
+    }
+
     .section-block {
       display: grid;
       grid-template-columns: 250px minmax(0, 1fr);
@@ -681,6 +793,14 @@
   </style>
 </head>
 <body>
+  <header class="app-header">
+    <button class="menu-button" id="menuButton" type="button" aria-label="Songs" aria-expanded="false" aria-controls="songMenu">
+      <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+    <div class="song-title" id="songTitle"></div>
+  </header>
+  <div class="menu-backdrop" id="menuBackdrop" hidden></div>
+  <nav class="song-menu" id="songMenu" aria-label="Song menu" hidden></nav>
   <main class="wrap">
     <section class="content" id="chart"></section>
   </main>
@@ -688,19 +808,20 @@
   <script>
     const chordShapes = [
       // strings: 0 low E, 1 A, 2 D, 3 G, 4 B, 5 high e
-      { name: "E/G#",  start: 12, muted: [0,1,2], dots: [[3,13,2],[4,12,1],[5,12,1]] },
-      { name: "Asus2", start: 9,  muted: [0,1,5], dots: [[2,9,1],[3,9,1],[4,10,2]] },
-      { name: "E",     start: 9,  muted: [0,1,5], dots: [[2,9,1],[3,9,1],[4,9,1]] },
-      { name: "Esus2", start: 9,  muted: [0,1],   dots: [[2,9,1],[3,11,2],[4,12,3],[5,12,4]] },
-      { name: "Esus4", start: 9,  muted: [0,1],   dots: [[2,9,1],[3,9,1],[4,10,2],[5,12,4]] },
-      { name: "C#m7",  start: 9,  muted: [0,1],   dots: [[2,9,1],[3,9,1],[4,9,1],[5,9,1]] },
-      { name: "B",     start: 11, muted: [0,1,2], dots: [[3,11,1],[4,12,3],[5,11,1]] },
-      { name: "E/B",   start: 9,  muted: [0,1],   dots: [[2,9,1],[3,9,1],[4,9,1],[5,12,4]] },
-      { name: "E/C#",  start: 9,  muted: [0,1],   dots: [[2,11,3],[3,9,1],[4,9,1],[5,12,4]] },
-      { name: "B/E",   start: 9,  muted: [0,1],   dots: [[2,9,1],[3,11,2],[4,12,4],[5,11,3]] },
-      { name: "B/D#",  start: 11, muted: [0,1,5], dots: [[2,13,3],[3,11,1],[4,12,2]] },
-      { name: "F#m7",  start: 10, muted: [0,1],   dots: [[2,11,2],[3,11,3],[4,10,1],[5,12,4]] },
-      { name: "Emaj7", start: 9,  muted: [0,1],   dots: [[2,9,1],[3,9,1],[4,9,1],[5,11,3]] }
+      { name: "C/E",     start: 8, muted: [0,1,2], dots: [[3,9,2],[4,8,1],[5,8,1]] },
+      { name: "C",       start: 5, muted: [0,1],   dots: [[2,5,1],[3,5,1],[4,5,1],[5,8,4]] },
+      { name: "Csus2",   start: 5, muted: [0,1,4], dots: [[2,5,1],[3,7,3],[5,8,4]] },
+      { name: "Csus4",   start: 5, muted: [0,1],   dots: [[2,5,1],[3,5,1],[4,6,2],[5,8,4]] },
+      { name: "Am7",     start: 5, muted: [0,1],   dots: [[2,5,1],[3,5,1],[4,5,1],[5,5,1]] },
+      { name: "F",       start: 5, muted: [0,1],   dots: [[2,7,3],[3,5,1],[4,6,2],[5,5,1]] },
+      { name: "Fsus2/C", start: 3, muted: [0,1,2], dots: [[3,5,3],[4,6,4],[5,3,1]] },
+      { name: "F/C",     start: 5, muted: [0,1,2], dots: [[3,5,1],[4,6,2],[5,5,1]] },
+      { name: "G",       start: 5, muted: [0,1],   dots: [[2,5,1],[3,7,2],[4,8,4],[5,7,3]] },
+      { name: "G/B",     start: 3, muted: [0,1,2], dots: [[3,4,2],[4,3,1],[5,3,1]] },
+      { name: "G/C",     start: 5, muted: [0,1,2], dots: [[3,5,1],[4,8,4],[5,7,3]] },
+      { name: "Dm7",     start: 6, muted: [0,1,2], dots: [[3,7,2],[4,6,1],[5,8,4]] },
+      { name: "E",       start: 4, muted: [0,1],   dots: [[2,6,3],[3,4,1],[4,5,2],[5,7,4]] },
+      { name: "Cmaj7",   start: 5, muted: [0,1],   dots: [[2,5,1],[3,5,1],[4,5,1],[5,7,3]] }
     ];
 
     const chart = [
@@ -722,7 +843,7 @@
                                     "Esus4"
                               ],
                               [
-                                    31,
+                                    34,
                                     "E"
                               ]
                         ],
@@ -752,7 +873,7 @@
                                     "Esus4"
                               ],
                               [
-                                    22,
+                                    26,
                                     "E"
                               ]
                         ],
@@ -840,7 +961,7 @@
                                     "Asus2"
                               ],
                               [
-                                    6,
+                                    8,
                                     "E"
                               ]
                         ],
@@ -853,7 +974,7 @@
                                     "Esus2"
                               ],
                               [
-                                    6,
+                                    8,
                                     "E"
                               ]
                         ],
@@ -1031,19 +1152,19 @@
                                     "E"
                               ],
                               [
-                                    3,
+                                    7,
                                     "Esus2"
                               ],
                               [
-                                    9,
+                                    15,
                                     "Esus4"
                               ],
                               [
-                                    15,
+                                    24,
                                     "E"
                               ],
                               [
-                                    20,
+                                    31,
                                     "E/G#"
                               ]
                         ],
@@ -1721,6 +1842,182 @@
       }
 ];
 
+    const soundMindChordShapes = [
+      { name: "G/B",  start: 9,  muted: [0,1],   dots: [[2,9,1],[3,12,3],[4,12,4],[5,10,2]] },
+      { name: "C",    start: 8,  muted: [0,1],   dots: [[2,10,3],[3,9,2],[4,8,1],[5,8,1]] },
+      { name: "D",    start: 10, muted: [0,1],   dots: [[2,12,3],[3,11,2],[4,10,1],[5,10,1]] },
+      { name: "Em7",  start: 14, muted: [0,1],   dots: [[2,14,1],[3,16,4],[4,15,3],[5,15,3]] },
+      { name: "Em",   start: 12, muted: [0,1],   dots: [[2,14,3],[3,12,1],[4,12,1],[5,12,1]] },
+      { name: "G",    start: 10, muted: [0,1,2], dots: [[3,12,2],[4,12,3],[5,10,1]] },
+      { name: "Am",   start: 12, muted: [0,1,2], dots: [[3,14,3],[4,13,2],[5,12,1]] },
+      { name: "D/F#", start: 10, muted: [0,1,2], dots: [[3,11,2],[4,10,1],[5,10,1]] }
+    ];
+
+    const soundMindChart = [
+      {
+        section: "Intro",
+        rows: [
+          { chords: [[0,"G/B"],[7,"C"],[11,"D"],[16,"Em7"]], cue: "" },
+          { chords: [[0,"G/B"],[7,"C"],[11,"D"],[16,"Em7"]], cue: "" }
+        ]
+      },
+      {
+        section: "Verse 1",
+        rows: [
+          { chords: [[0,"G/B"],[24,"C"]], cue: "Whatever is true and lovely" },
+          { chords: [[5,"D"],[24,"Em7"]], cue: "Whatever is pure and holy" },
+          { chords: [[0,"G/B"],[22,"C"]], cue: "I fix my thoughts upon it" },
+          { chords: [[0,"D"],[22,"Em7"]], cue: "Fix my thoughts on You" }
+        ]
+      },
+      {
+        section: "Verse 2",
+        rows: [
+          { chords: [[0,"G/B"],[25,"C"]], cue: "Whatever is right and worthy" },
+          { chords: [[5,"D"],[26,"Em7"]], cue: "Whatever is good and deserving" },
+          { chords: [[0,"G/B"],[19,"C"]], cue: "I fix my heart upon it" },
+          { chords: [[0,"D"],[19,"Em7"]], cue: "Fix my heart on You" }
+        ]
+      },
+      {
+        section: "Chorus",
+        rows: [
+          { chords: [[10,"G/B"]], cue: "I've got spirit of praise" },
+          { chords: [[8,"C"]], cue: "For the heaviness" },
+          { chords: [[12,"D"]], cue: "I've got a song to raise" },
+          { chords: [[8,"Em7"]], cue: "In the midst of it" },
+          { chords: [[12,"G/B"],[24,"C"]], cue: "I've got a sound mind" },
+          { chords: [[12,"D"],[22,"Em7"]], cue: "I've got a sound mind" }
+        ]
+      },
+      {
+        section: "Interlude",
+        rows: [
+          { chords: [[0,"G/B"],[7,"C"],[11,"D"],[16,"Em7"]], cue: "" },
+          { chords: [[0,"G/B"],[7,"C"],[11,"D"],[16,"Em7"]], cue: "" }
+        ]
+      },
+      {
+        section: "Verse 3",
+        rows: [
+          { chords: [[0,"G/B"],[21,"C"]], cue: "Now every lie is broken" },
+          { chords: [[2,"D"],[30,"Em7"]], cue: "Because of the words You've spoken" },
+          { chords: [[0,"G/B"],[23,"C"]], cue: "I trust the way You made me" },
+          { chords: [[0,"D"],[17,"Em7"]], cue: "I was made for You" }
+        ]
+      },
+      {
+        section: "Verse 4",
+        rows: [
+          { chords: [[4,"G/B"],[25,"C"]], cue: "And now every curse is broken" },
+          { chords: [[2,"D"],[30,"Em7"]], cue: "Because of the words You've spoken" },
+          { chords: [[0,"G/B"],[23,"C"]], cue: "I trust the way You made me" },
+          { chords: [[0,"D"],[17,"Em7"]], cue: "I was made for You" }
+        ]
+      },
+      {
+        section: "Chorus",
+        rows: [
+          { chords: [[10,"G/B"]], cue: "I've got spirit of praise" },
+          { chords: [[8,"C"]], cue: "For the heaviness" },
+          { chords: [[12,"D"]], cue: "I've got a song to raise" },
+          { chords: [[8,"Em7"]], cue: "In the midst of it" },
+          { chords: [[12,"G/B"],[24,"C"]], cue: "I've got a sound mind" },
+          { chords: [[12,"D"],[22,"Em7"]], cue: "I've got a sound mind" },
+          { chords: [[12,"G/B"]], cue: "You give a spirit of praise" },
+          { chords: [[8,"C"]], cue: "For the heaviness" },
+          { chords: [[12,"D"]], cue: "Gave us a song to raise" },
+          { chords: [[8,"Em"]], cue: "In the midst of it" },
+          { chords: [[12,"G/B"],[24,"C"]], cue: "I've got a sound mind" },
+          { chords: [[12,"D"],[22,"Em"]], cue: "I've got a sound mind" }
+        ]
+      },
+      {
+        section: "Interlude",
+        rows: [
+          { chords: [[0,"G/B"],[7,"C"],[11,"D"],[16,"Em"]], cue: "" },
+          { chords: [[0,"G/B"],[7,"C"],[11,"D"],[16,"Em"]], cue: "" }
+        ]
+      },
+      {
+        section: "Bridge",
+        rows: [
+          { chords: [[0,"C"]], cue: "Spirit of fear" },
+          { chords: [[8,"Am"]], cue: "You've no power here" },
+          { chords: [[5,"G"],[14,"D"]], cue: "You must leave" },
+          { chords: [[0,"C"]], cue: "Spirit of shame" },
+          { chords: [[8,"Am"]], cue: "You don't know my name" },
+          { chords: [[5,"G"],[15,"D"]], cue: "You must leave" },
+          { chords: [[0,"C"]], cue: "I'm seated above" },
+          { chords: [[9,"Am"]], cue: "With power and love" },
+          { chords: [[4,"G"],[13,"D"]], cue: "Oh I'm free" },
+          { chords: [[0,"C"]], cue: "Greater is He" },
+          { chords: [[8,"Am"]], cue: "Who reigns over me" },
+          { chords: [[5,"G"],[13,"D"]], cue: "Yes He reigns" },
+          { chords: [[8,"C"],[11,"G/B"],[17,"Em"],[21,"D"]], cue: "Receive joy" },
+          { chords: [[8,"C"],[11,"G/B"]], cue: "Receive joy" },
+          { chords: [[14,"D"],[23,"D/F#"]], cue: "He gave us a sound mind" },
+          { chords: [[8,"C"],[12,"G/B"],[17,"Em"],[21,"D"]], cue: "Receive joy" },
+          { chords: [[8,"C"],[12,"G/B"]], cue: "Receive joy" },
+          { chords: [[14,"Em"],[23,"D"]], cue: "He gave us a sound mind" }
+        ]
+      },
+      {
+        section: "Chorus",
+        rows: [
+          { chords: [[17,"N.C."]], cue: "I've got spirit of praise" },
+          { chords: [[0,"N.C."]], cue: "For the heaviness" },
+          { chords: [[0,"N.C."]], cue: "I've got a song to raise" },
+          { chords: [[0,"N.C."]], cue: "In the midst of it" },
+          { chords: [[12,"G/B"],[24,"C"]], cue: "I've got a sound mind" },
+          { chords: [[12,"D"],[22,"Em"]], cue: "I've got a sound mind" },
+          { chords: [[12,"G/B"]], cue: "You give a spirit of praise" },
+          { chords: [[8,"C"]], cue: "For the heaviness" },
+          { chords: [[12,"D"]], cue: "Gave us a song to raise" },
+          { chords: [[8,"Em"]], cue: "In the midst of it" },
+          { chords: [[12,"G/B"],[24,"C"]], cue: "I've got a sound mind" },
+          { chords: [[12,"D"],[22,"Em"]], cue: "I've got a sound mind" }
+        ]
+      },
+      {
+        section: "Interlude",
+        rows: [
+          { chords: [[0,"G/B"],[7,"C"],[11,"D"],[16,"Em"],[21,"G"],[25,"C"],[29,"D"],[34,"Em"]], cue: "" }
+        ]
+      },
+      {
+        section: "Outro",
+        rows: [
+          { chords: [[8,"G/B"],[14,"C"],[18,"D"],[23,"Em"]], cue: "Receive joy" },
+          { chords: [[8,"G/B"],[14,"C"],[18,"D"],[23,"Em"]], cue: "Receive joy" },
+          { chords: [[14,"D"],[23,"Em"]], cue: "He gave us a sound mind" },
+          { chords: [[8,"G/B"],[14,"C"],[18,"D"],[23,"Em"]], cue: "Receive joy" },
+          { chords: [[8,"G/B"],[14,"C"],[18,"D"],[23,"Em"]], cue: "Receive joy" },
+          { chords: [[14,"D"]], cue: "He gave us a sound mind" },
+          { chords: [[0,"Em"],[5,"D"],[9,"C"]], cue: "" }
+        ]
+      }
+    ];
+
+    const songs = [
+      {
+        id: "thank-god-c",
+        title: "Thank God I'm Free - C",
+        chordShapes,
+        chart,
+        normalize: normalizeThankGodChordName
+      },
+      {
+        id: "sound-mind-g",
+        title: "Sound Mind - G",
+        chordShapes: soundMindChordShapes,
+        chart: soundMindChart,
+        normalize: name => name
+      }
+    ];
+
+    let activeSong = songs[0];
+
     function renderShape(shape) {
       const playedStrings = new Set(shape.dots.map(d => d[0]));
       const muted = new Set(shape.muted || []);
@@ -1752,8 +2049,48 @@
       `;
     }
 
-    function normalizeChordName(name) {
-      return name === "A" ? "Asus2" : name;
+    function normalizeThankGodChordName(name, sectionName = "", cue = "") {
+      if (sectionName === "Bridge" && name === "Esus4") return "Fsus2/C";
+      if (sectionName === "Outro" && name === "Esus2") return "F/C";
+      if (sectionName === "Final Chorus" && cue.includes("My sin is gone")) {
+        if (name === "A") return "F";
+        if (name === "E/G#") return "E";
+      }
+      if (sectionName === "Intro" && cue.includes("We thank You")) {
+        if (name === "E") return "F";
+        if (name === "Esus2") return "E";
+      }
+
+      const chordNameMap = {
+        "E/G#": "C/E",
+        "Asus2": "Csus4",
+        "A": "F",
+        "E": "C",
+        "Esus2": "Csus2",
+        "Esus4": "Csus4",
+        "C#m7": "Am7",
+        "B": "G",
+        "E/B": "C",
+        "B/E": "G/C",
+        "B/D#": "G/B",
+        "F#m7": "Dm7",
+        "Emaj7": "Cmaj7"
+      };
+
+      return chordNameMap[name] || name;
+    }
+
+    function normalizeChordName(name, sectionName = "", cue = "") {
+      return activeSong.normalize(name, sectionName, cue);
+    }
+
+    function getShapeSignature(shape) {
+      return JSON.stringify({
+        start: shape.start,
+        muted: [...(shape.muted || [])].sort(),
+        open: [...(shape.open || [])].sort(),
+        dots: shape.dots.map(dot => dot.join(":")).sort()
+      });
     }
 
     function getSectionChordNames(section) {
@@ -1761,8 +2098,8 @@
       const names = [];
       section.rows.forEach(row => {
         row.chords.forEach(([, rawName]) => {
-          const name = normalizeChordName(rawName);
-          if (!seen.has(name)) {
+          const name = normalizeChordName(rawName, section.section, row.cue);
+          if (name !== "N.C." && !seen.has(name)) {
             seen.add(name);
             names.push(name);
           }
@@ -1773,21 +2110,26 @@
 
     function renderSectionChordBank(section) {
       const names = getSectionChordNames(section);
+      const seenShapes = new Set();
       return names.map(name => {
-        const shape = chordShapes.find(s => s.name === name);
-        return shape ? renderShape(shape) : `<div class="shape missing-shape"><h3>${name}</h3></div>`;
+        const shape = activeSong.chordShapes.find(s => s.name === name);
+        if (!shape) return `<div class="shape missing-shape"><h3>${name}</h3></div>`;
+        const signature = getShapeSignature(shape);
+        if (seenShapes.has(signature)) return "";
+        seenShapes.add(signature);
+        return renderShape(shape);
       }).join("");
     }
 
     function renderChart() {
-      const html = chart.map(section => {
+      const html = activeSong.chart.map(section => {
         const rows = section.rows.map(row => {
           const rowClasses = ["songline"];
           if (!row.chords.length) rowClasses.push("no-chords");
           if (!row.cue.trim()) rowClasses.push("empty");
 
           const chords = row.chords.map(([x, name]) => {
-            const displayName = normalizeChordName(name);
+            const displayName = normalizeChordName(name, section.section, row.cue);
             return `<span class="chord" style="--x:${x}">${displayName}</span>`;
           }).join("");
 
@@ -1808,15 +2150,19 @@
       document.getElementById("chart").innerHTML = html;
     }
 
-    renderChart();
-
-    // Persist edits locally. Tiny mercy in this collapsing civilization.
-    const storageKey = "high-voicing-chart-edits-v8-section-markers-big-moving-tabs";
     const chartEl = document.getElementById("chart");
+    const songTitleEl = document.getElementById("songTitle");
+    const menuButton = document.getElementById("menuButton");
+    const songMenu = document.getElementById("songMenu");
+    const menuBackdrop = document.getElementById("menuBackdrop");
+
+    function getStorageKey() {
+      return `high-voicing-chart-edits-${activeSong.id}-v1`;
+    }
 
     function loadEdits() {
       try {
-        const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
+        const saved = JSON.parse(localStorage.getItem(getStorageKey()) || "[]");
         [...document.querySelectorAll(".editline")].forEach((el, index) => {
           if (saved[index]) el.textContent = saved[index];
         });
@@ -1825,11 +2171,52 @@
 
     function saveEdits() {
       const lines = [...document.querySelectorAll(".editline")].map(el => el.textContent);
-      localStorage.setItem(storageKey, JSON.stringify(lines));
+      localStorage.setItem(getStorageKey(), JSON.stringify(lines));
+    }
+
+    function renderSongMenu() {
+      songMenu.innerHTML = songs.map(song => `
+        <button type="button" data-song-id="${song.id}" aria-current="${song.id === activeSong.id}">
+          ${song.title}
+        </button>
+      `).join("");
+    }
+
+    function openMenu() {
+      songMenu.hidden = false;
+      menuBackdrop.hidden = false;
+      menuButton.setAttribute("aria-expanded", "true");
+    }
+
+    function closeMenu() {
+      songMenu.hidden = true;
+      menuBackdrop.hidden = true;
+      menuButton.setAttribute("aria-expanded", "false");
+    }
+
+    function setActiveSong(songId) {
+      activeSong = songs.find(song => song.id === songId) || songs[0];
+      document.title = activeSong.title;
+      songTitleEl.textContent = activeSong.title;
+      renderSongMenu();
+      renderChart();
+      loadEdits();
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      closeMenu();
     }
 
     chartEl.addEventListener("input", saveEdits);
-    loadEdits();
+    menuButton.addEventListener("click", () => {
+      if (songMenu.hidden) openMenu();
+      else closeMenu();
+    });
+    menuBackdrop.addEventListener("click", closeMenu);
+    songMenu.addEventListener("click", event => {
+      const button = event.target.closest("button[data-song-id]");
+      if (button) setActiveSong(button.dataset.songId);
+    });
+
+    setActiveSong("thank-god-c");
   </script>
 </body>
 </html>
