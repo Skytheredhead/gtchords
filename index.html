@@ -1843,14 +1843,14 @@
 ];
 
     const soundMindChordShapes = [
-      { name: "G/B",  start: 9,  muted: [0,1],   dots: [[2,9,1],[3,12,3],[4,12,4],[5,10,2]] },
-      { name: "C",    start: 8,  muted: [0,1],   dots: [[2,10,3],[3,9,2],[4,8,1],[5,8,1]] },
-      { name: "D",    start: 10, muted: [0,1],   dots: [[2,12,3],[3,11,2],[4,10,1],[5,10,1]] },
-      { name: "Em7",  start: 14, muted: [0,1],   dots: [[2,14,1],[3,16,4],[4,15,3],[5,15,3]] },
-      { name: "Em",   start: 12, muted: [0,1],   dots: [[2,14,3],[3,12,1],[4,12,1],[5,12,1]] },
-      { name: "G",    start: 10, muted: [0,1,2], dots: [[3,12,2],[4,12,3],[5,10,1]] },
-      { name: "Am",   start: 12, muted: [0,1,2], dots: [[3,14,3],[4,13,2],[5,12,1]] },
-      { name: "D/F#", start: 10, muted: [0,1,2], dots: [[3,11,2],[4,10,1],[5,10,1]] }
+      { name: "G/B",  start: 1, muted: [0],   open: [2,3],       dots: [[1,2,1],[4,3,3],[5,3,4]] },
+      { name: "C",    start: 1, muted: [0],   open: [3,5],       dots: [[1,3,3],[2,2,2],[4,1,1]] },
+      { name: "D",    start: 1, muted: [0,1], open: [2],         dots: [[3,2,1],[4,3,3],[5,2,2]] },
+      { name: "Em7",  start: 1, muted: [],    open: [0,3],       dots: [[1,2,1],[2,2,2],[4,3,3],[5,3,4]] },
+      { name: "Em",   start: 1, muted: [],    open: [0,3,4,5],   dots: [[1,2,2],[2,2,3]] },
+      { name: "G",    start: 1, muted: [],    open: [2,3],       dots: [[0,3,2],[1,2,1],[4,3,3],[5,3,4]] },
+      { name: "Am",   start: 1, muted: [0],   open: [1,5],       dots: [[2,2,2],[3,2,3],[4,1,1]] },
+      { name: "D/F#", start: 1, muted: [1],   open: [2],         dots: [[0,2,1],[3,2,2],[4,3,4],[5,2,3]] }
     ];
 
     const soundMindChart = [
@@ -1999,6 +1999,164 @@
       }
     ];
 
+    const perfectLoveChordShapes = [
+      { name: "E",      start: 4, muted: [0,1,2], dots: [[3,4,1],[4,5,3],[5,4,2]] },
+      { name: "B/D#",   start: 2, muted: [0,1,2], dots: [[3,4,2],[4,4,3],[5,2,1]] },
+      { name: "A/C#",   start: 1, muted: [0,1,2], open: [5],       dots: [[3,2,1],[4,2,2]] },
+      { name: "E/B",    start: 1, muted: [0,1,2], open: [4,5],     dots: [[3,1,1]] },
+      { name: "A",      start: 1, muted: [0,1,2], open: [5],       dots: [[3,2,1],[4,2,2]] },
+      { name: "E/G#",   start: 4, muted: [0,1,2], dots: [[3,4,1],[4,5,3],[5,4,2]] },
+      { name: "Amaj7",  start: 1, muted: [0,1,2], open: [5],       dots: [[3,1,1],[4,2,2]] },
+      { name: "Asus2",  start: 1, muted: [0,1,2], open: [4,5],     dots: [[3,2,1]] },
+      { name: "Bsus4",  start: 2, muted: [0,1,2], dots: [[3,4,2],[4,5,3],[5,2,1]] },
+      { name: "B7sus4", start: 4, muted: [0,1,2], dots: [[3,4,1],[4,5,2],[5,5,3]] },
+      { name: "B",      start: 2, muted: [0,1,2], dots: [[3,4,2],[4,4,3],[5,2,1]] },
+      { name: "F#m7",   start: 1, muted: [0,1,2], dots: [[3,2,1],[4,2,1],[5,2,1]] }
+    ];
+
+    const perfectLoveChart = [
+      {
+        section: "Setup",
+        rows: [
+          { chords: [], cue: "No capo. Mostly partial D/A-shape grips on the D-G-B-e strings." },
+          { chords: [], cue: "For slash chords, treat the name as the song moment; do not chase every bass note when playing solo." },
+          { chords: [], cue: "Fingerpick/light downstrokes early, add steady eighths by Chorus 2, open up on the bridge." }
+        ]
+      },
+      {
+        section: "Intro",
+        rows: [
+          { chords: [[0,"E"],[5,"B/D#"],[12,"A/C#"],[20,"E/B"]], cue: "" },
+          { chords: [[0,"A"],[5,"E/G#"],[12,"Amaj7"],[21,"B7sus4"]], cue: "" }
+        ]
+      },
+      {
+        section: "Verse 1",
+        rows: [
+          { chords: [[0,"E"]], cue: "Better than" },
+          { chords: [[0,"B/D#"],[20,"A/C#"],[27,"E/B"]], cue: "I ever considered" },
+          { chords: [[0,"A"],[18,"E/G#"]], cue: "Your forgiveness" },
+          { chords: [[0,"Asus2"],[25,"Bsus4"],[33,"B"]], cue: "Heals the depths of my being" },
+          { chords: [[0,"E"]], cue: "This is where" },
+          { chords: [[0,"B/D#"],[18,"A/C#"],[25,"E/B"]], cue: "I find acceptance" },
+          { chords: [[0,"A"],[16,"E/G#"]], cue: "No exceptions" },
+          { chords: [[0,"Asus2"],[16,"Bsus4"]], cue: "Undeniably free" }
+        ]
+      },
+      {
+        section: "Chorus",
+        rows: [
+          { chords: [[0,"E"],[19,"B/D#"]], cue: "After all I've seen" },
+          { chords: [[0,"A/C#"],[20,"E/B"]], cue: "It's so clear to me" },
+          { chords: [[0,"A"],[28,"E/G#"]], cue: "Without the love of Jesus" },
+          { chords: [[0,"Asus2"],[28,"Bsus4"]], cue: "I don't know where I would be" },
+          { chords: [[0,"E"],[19,"B/D#"]], cue: "Overwhelming grace" },
+          { chords: [[0,"A/C#"],[19,"E/B"]], cue: "Covers all my days" },
+          { chords: [[0,"Asus2"],[31,"E/G#"]], cue: "Oh the perfect love of Jesus" },
+          { chords: [[0,"Asus2"],[17,"Bsus4"]], cue: "Is every thing to me" }
+        ]
+      },
+      {
+        section: "Interlude",
+        rows: [
+          { chords: [[0,"E"],[5,"B/D#"],[12,"A/C#"],[20,"E/B"]], cue: "" },
+          { chords: [[0,"A"],[5,"E/G#"],[12,"Amaj7"],[21,"B7sus4"]], cue: "" }
+        ]
+      },
+      {
+        section: "Verse 2",
+        rows: [
+          { chords: [[0,"E"],[24,"B/D#"]], cue: "I don't have to strive" },
+          { chords: [[0,"A/C#"],[16,"E/B"]], cue: "For perfection" },
+          { chords: [[0,"A"]], cue: "In Your presence" },
+          { chords: [[0,"E/G#"],[23,"Amaj7"],[32,"Bsus4"],[40,"B"]], cue: "I have all that I need" },
+          { chords: [[0,"E"]], cue: "You sit with me" },
+          { chords: [[0,"B/D#"],[21,"A/C#"]], cue: "In all of my questions" },
+          { chords: [[0,"E/B"],[16,"A"]], cue: "And You listen" },
+          { chords: [[0,"E/G#"],[23,"Asus2"],[30,"Bsus4"]], cue: "Oh You're patient with me" }
+        ]
+      },
+      {
+        section: "Chorus 2",
+        rows: [
+          { chords: [[0,"E"],[19,"B/D#"]], cue: "After all I've seen" },
+          { chords: [[0,"A/C#"],[20,"E/B"]], cue: "It's so clear to me" },
+          { chords: [[0,"A"],[28,"E/G#"]], cue: "Without the love of Jesus" },
+          { chords: [[0,"A"],[28,"Bsus4"]], cue: "I don't know where I would be" },
+          { chords: [[0,"E"],[19,"B/D#"]], cue: "Overwhelming grace" },
+          { chords: [[0,"A/C#"],[19,"E/B"]], cue: "Covers all my days" },
+          { chords: [[0,"A"],[31,"E/G#"]], cue: "Oh the perfect love of Jesus" },
+          { chords: [[0,"A"],[17,"Bsus4"]], cue: "Is every thing to me" }
+        ]
+      },
+      {
+        section: "Instrumental",
+        rows: [
+          { chords: [[0,"E"],[5,"B/D#"],[12,"A/C#"],[20,"E/B"]], cue: "" },
+          { chords: [[0,"A"],[5,"E/G#"],[12,"Amaj7"],[21,"B7sus4"]], cue: "" }
+        ]
+      },
+      {
+        section: "Bridge A",
+        rows: [
+          { chords: [[0,"E"],[11,"B/D#"]], cue: "I'm loved   I'm chosen" },
+          { chords: [[0,"A/C#"],[13,"E/B"]], cue: "Your arms   wide open" },
+          { chords: [[0,"A"],[28,"E/G#"]], cue: "I could never mess it up" },
+          { chords: [[0,"A"],[28,"Bsus4"]], cue: "I could never mess it up" },
+          { chords: [], cue: "Repeat 2-4x. Start sparse, then build." }
+        ]
+      },
+      {
+        section: "Bridge Turn",
+        rows: [
+          { chords: [[0,"F#m7"],[8,"E/G#"],[15,"A"],[21,"B"]], cue: "" },
+          { chords: [[0,"F#m7"],[8,"E/G#"],[15,"A"],[21,"Bsus4"],[29,"B"]], cue: "" }
+        ]
+      },
+      {
+        section: "Bridge B",
+        rows: [
+          { chords: [[0,"F#m7"],[12,"E/G#"]], cue: "I'm loved   I'm chosen" },
+          { chords: [[0,"A"],[13,"Bsus4"]], cue: "Your arms   wide open" },
+          { chords: [[0,"F#m7"],[28,"E/G#"]], cue: "I could never mess it up" },
+          { chords: [[0,"A"],[28,"Bsus4"],[36,"B"]], cue: "I could never mess it up" },
+          { chords: [], cue: "Repeat as needed. Build from muted eighths to full open strums." }
+        ]
+      },
+      {
+        section: "Breakdown Chorus",
+        rows: [
+          { chords: [[0,"E"],[19,"B/D#"]], cue: "After all I've seen" },
+          { chords: [[0,"A/C#"],[20,"E/B"]], cue: "It's so clear to me" },
+          { chords: [[0,"A"]], cue: "Without the love of Jesus" },
+          { chords: [[0,"A"],[28,"Bsus4"]], cue: "I don't know where I would be" },
+          { chords: [[0,"E"],[19,"B/D#"]], cue: "Overwhelming grace" },
+          { chords: [[0,"A/C#"],[19,"E/B"]], cue: "Covers all my days" },
+          { chords: [[0,"A"]], cue: "Oh the perfect love of Jesus" },
+          { chords: [[0,"A"]], cue: "Is every thing" }
+        ]
+      },
+      {
+        section: "Final Chorus",
+        rows: [
+          { chords: [[0,"E"],[19,"B/D#"]], cue: "After all I've seen" },
+          { chords: [[0,"A/C#"],[20,"E/B"]], cue: "It's so clear to me" },
+          { chords: [[0,"A"],[28,"E/G#"]], cue: "Without the love of Jesus" },
+          { chords: [[0,"A"],[28,"Bsus4"]], cue: "I don't know where I would be" },
+          { chords: [[0,"E"],[19,"B/D#"]], cue: "Overwhelming grace" },
+          { chords: [[0,"A/C#"],[19,"E/B"]], cue: "Covers all my days" },
+          { chords: [[0,"A"],[27,"E/G#"]], cue: "The perfect love of Jesus" },
+          { chords: [[0,"Asus2"],[17,"Bsus4"]], cue: "Is every thing to me" }
+        ]
+      },
+      {
+        section: "Ending",
+        rows: [
+          { chords: [[0,"E"]], cue: "" }
+        ]
+      }
+    ];
+
     const songs = [
       {
         id: "thank-god-c",
@@ -2012,6 +2170,13 @@
         title: "Sound Mind - G",
         chordShapes: soundMindChordShapes,
         chart: soundMindChart,
+        normalize: name => name
+      },
+      {
+        id: "perfect-love-jesus-e",
+        title: "The Perfect Love of Jesus - E",
+        chordShapes: perfectLoveChordShapes,
+        chart: perfectLoveChart,
         normalize: name => name
       }
     ];
